@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>CONESUP - Gestión de Trámites</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script defer src="app.js"></script>
+    </head>
+    <body>
+        <div class="app-shell">
+            <header class="topbar">
+                <div class="brand" onclick="location.href='/'">
+                    <div class="logo">C</div>
+                    <div>
+                        <h1>CONESUP</h1>
+                        <div class="muted" style="font-size: 12px">
+                            Módulo de Gestión de Trámites
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn ghost" onclick="location.href='/'">
+                        Inicio
+                    </button>
+                </div>
+            </header>
+
+            <main class="container" style="max-width: 500px; margin: 40px auto">
+                <!-- TABS -->
+                <div
+                    style="
+                        display: flex;
+                        gap: 12px;
+                        margin-bottom: 20px;
+                        border-bottom: 1px solid #eef2ff;
+                    "
+                >
+                    <button
+                        id="tabLogin"
+                        class="tab-btn active"
+                        style="
+                            padding: 12px 20px;
+                            border: none;
+                            background: none;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #0b5cff;
+                            border-bottom: 2px solid #0b5cff;
+                        "
+                        onclick="switchTab('login')"
+                    >
+                        Iniciar Sesión
+                    </button>
+                    <button
+                        id="tabRegister"
+                        class="tab-btn"
+                        style="
+                            padding: 12px 20px;
+                            border: none;
+                            background: none;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #94a3b8;
+                            border-bottom: 2px solid transparent;
+                        "
+                        onclick="switchTab('register')"
+                    >
+                        Registrarse
+                    </button>
+                </div>
+
+                <!-- LOGIN TAB -->
+                <div id="loginTab" style="display: block">
+                    <section class="card">
+                        <h3 style="margin-top: 0">Acceso a tu cuenta</h3>
+                        <form
+                            id="loginForm"
+                            class="form"
+                            style="margin-top: 16px"
+                        >
+                            <div class="form-group">
+                                <label>Correo Electrónico</label>
+                                <input
+                                    name="email"
+                                    type="email"
+                                    class="input"
+                                    placeholder="tu@email.com"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label>Cédula</label>
+                                <input
+                                    name="cedula"
+                                    class="input"
+                                    placeholder="1-234-567890"
+                                    required
+                                />
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 12px;
+                                    justify-content: flex-end;
+                                    margin-top: 16px;
+                                "
+                            >
+                                <button class="btn ghost" type="reset">
+                                    Limpiar
+                                </button>
+                                <button class="btn primary" type="submit">
+                                    Iniciar Sesión
+                                </button>
+                            </div>
+                        </form>
+
+                        <form
+                            id="mfaForm"
+                            style="display: none; margin-top: 16px"
+                        >
+                            <div class="form-group">
+                                <label>Código MFA</label>
+                                <input
+                                    name="code"
+                                    class="input"
+                                    placeholder="123456"
+                                    required
+                                />
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 12px;
+                                    justify-content: flex-end;
+                                    margin-top: 12px;
+                                "
+                            >
+                                <button
+                                    class="btn ghost"
+                                    type="button"
+                                    onclick="location.href='login.html'"
+                                >
+                                    Cancelar
+                                </button>
+                                <button class="btn primary" type="submit">
+                                    Verificar
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <!-- REGISTER TAB -->
+                <div id="registerTab" style="display: none">
+                    <section class="card">
+                        <h3 style="margin-top: 0">Crear nueva cuenta</h3>
+                        <form
+                            id="registerForm"
+                            class="form"
+                            style="margin-top: 16px"
+                        >
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre Completo</label>
+                                    <input
+                                        name="nombre"
+                                        class="input"
+                                        placeholder="Juan Pérez"
+                                        required
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label>Cédula</label>
+                                    <input
+                                        name="cedula"
+                                        class="input"
+                                        placeholder="1-234-567890"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Correo Electrónico</label>
+                                <input
+                                    name="email"
+                                    type="email"
+                                    class="input"
+                                    placeholder="tu@email.com"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Usuario</label>
+                                <select name="rol" class="input" required>
+                                    <option value="">Seleccionar rol...</option>
+                                    <option value="Estudiante">
+                                        Estudiante
+                                    </option>
+                                    <option value="Representante">
+                                        Representante (Universidad)
+                                    </option>
+                                    <option value="Delegado">
+                                        Delegado (Universidad)
+                                    </option>
+                                    <option value="Funcionario">
+                                        Funcionario (CONESUP)
+                                    </option>
+                                </select>
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 12px;
+                                    justify-content: flex-end;
+                                    margin-top: 16px;
+                                "
+                            >
+                                <button class="btn ghost" type="reset">
+                                    Limpiar
+                                </button>
+                                <button class="btn primary" type="submit">
+                                    Crear Cuenta
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </main>
+        </div>
+
+        <script>
+            function switchTab(tab) {
+                const loginTab = document.getElementById("loginTab");
+                const registerTab = document.getElementById("registerTab");
+                const btnLogin = document.getElementById("tabLogin");
+                const btnRegister = document.getElementById("tabRegister");
+
+                if (tab === "login") {
+                    loginTab.style.display = "block";
+                    registerTab.style.display = "none";
+                    btnLogin.style.color = "#0b5cff";
+                    btnLogin.style.borderBottomColor = "#0b5cff";
+                    btnRegister.style.color = "#94a3b8";
+                    btnRegister.style.borderBottomColor = "transparent";
+                    document.getElementById("loginForm").reset();
+                } else {
+                    loginTab.style.display = "none";
+                    registerTab.style.display = "block";
+                    btnLogin.style.color = "#94a3b8";
+                    btnLogin.style.borderBottomColor = "transparent";
+                    btnRegister.style.color = "#0b5cff";
+                    btnRegister.style.borderBottomColor = "#0b5cff";
+                    document.getElementById("registerForm").reset();
+                }
+            }
+        </script>
+    </body>
+</html>

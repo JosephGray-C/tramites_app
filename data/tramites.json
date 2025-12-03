@@ -1,0 +1,27 @@
+[
+  {
+    "id": "3ceff343-a028-4a1b-9abc-e9df7da51a26",
+    "version": 1,
+    "tipo": "General",
+    "fechaCreacion": "2025-12-03T22:31:56.670Z",
+    "fechaActualizacion": "2025-12-03T22:31:56.670Z",
+    "estado": "Pendiente",
+    "datos": {
+      "nombre": "Joseph",
+      "cedula": "1",
+      "telefono": "8821575",
+      "grado": "maestria",
+      "universidad": "CENFOTEC",
+      "sede": "Sede Central",
+      "rol": "Estudiante"
+    },
+    "documentos": [
+      {
+        "name": "Empresas.pdf",
+        "file": "3ceff343-a028-4a1b-9abc-e9df7da51a26_1764801116671_Empresas.pdf.enc"
+      }
+    ],
+    "usuarioCreador": "josephgray514@gmail.com",
+    "historial": []
+  }
+]

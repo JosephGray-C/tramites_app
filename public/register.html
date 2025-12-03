@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CONESUP - Registro de Trámite</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script defer src="app.js"></script>
+        <style>
+            /* Solo estilos mínimos específicos para esta página */
+        </style>
+    </head>
+    <body>
+        <div class="app-shell">
+            <header class="topbar">
+                <div class="brand" onclick="location.href='/'">
+                    <div class="logo">C</div>
+                    <h1>CONESUP</h1>
+                </div>
+                <div class="nav-actions">
+                    <button
+                        class="btn ghost"
+                        onclick="location.href='my_tramites.html'"
+                    >
+                        📋 Mis Trámites
+                    </button>
+                    <button class="btn ghost" onclick="logout()">
+                        🚪 Cerrar Sesión
+                    </button>
+                </div>
+            </header>
+
+            <main class="container" style="max-width: 900px">
+                <section
+                    style="
+                        background: #1f2937;
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 12px 12px 0 0;
+                    "
+                >
+                    <h1 style="margin: 0; font-size: 1.4rem; font-weight: 700">
+                        CONESUP – Registro de trámite
+                    </h1>
+                    <p
+                        style="
+                            margin: 4px 0 0 0;
+                            font-size: 0.85rem;
+                            opacity: 0.9;
+                        "
+                    >
+                        Módulo de gestión de trámites · RF-001 · Solo para
+                        cuentas primarias o delegadas
+                    </p>
+                </section>
+
+                <section
+                    class="card"
+                    style="border-radius: 0 0 12px 12px; margin-top: 0"
+                >
+                    <div
+                        class="meta-info"
+                        style="
+                            margin-bottom: 16px;
+                            font-size: 0.85rem;
+                            color: #4b5563;
+                        "
+                    >
+                        <span
+                            ><strong>ID:</strong> CONESUP-TRM-RF-001-v1.0</span
+                        >
+                        <span><strong>Estado:</strong> En análisis</span>
+                        <span><strong>Prioridad:</strong> Must</span>
+                    </div>
+
+                    <h2
+                        style="
+                            margin-top: 0;
+                            margin-bottom: 8px;
+                            font-size: 1.15rem;
+                            color: #111827;
+                            font-weight: 600;
+                        "
+                    >
+                        Formulario de registro de trámite
+                    </h2>
+                    <p
+                        style="
+                            font-size: 0.9rem;
+                            color: #64748b;
+                            margin-bottom: 16px;
+                        "
+                    >
+                        Complete todos los campos obligatorios marcados con
+                        <span style="color: #dc2626">*</span> antes de enviar el
+                        trámite.
+                    </p>
+
+                    <form id="tramiteForm" novalidate>
+                        <!-- Fila 1 -->
+                        <div
+                            class="form-row"
+                            style="
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                gap: 16px;
+                                margin-bottom: 16px;
+                            "
+                        >
+                            <div class="form-group">
+                                <label
+                                    for="nombreCompleto"
+                                    style="
+                                        display: block;
+                                        margin-bottom: 6px;
+                                        font-size: 0.9rem;
+                                        color: #111827;
+                                        font-weight: 500;
+                                    "
+                                >
+                                    Nombre completo del solicitante
+                                    <span
+                                        style="
+                                            color: #dc2626;
+                                            font-weight: bold;
+                                        "
+                                        >*</span
+                                    >
+                                </label>
+                                <input
+                                    type="text"
+                                    id="nombreCompleto"
+                                    name="nombre"
+                                    placeholder="Ej. Juan Pérez Ramírez"
+                                    required
+                                    style="
+                                        width: 100%;
+                                        padding: 10px 12px;
+                                        border-radius: 8px;
+                                        border: 1px solid #d1d5db;
+                                        font-size: 0.95rem;
+                                        outline: none;
+                                        background: #f9fafb;
+                                    "
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    for="identificacion"
+                                    style="
+                                        display: block;
+                                        margin-bottom: 6px;
+                                        font-size: 0.9rem;
+                                        color: #111827;
+                                        font-weight: 500;
+                                    "
+                                >
+                                    Identificación del solicitante
+                                    <span
+                                        style="
+                                            color: #dc2626;
+                                            font-weight: bold;
+                                        "
+                                        >*</span
+                                    >
+                                </label>
+                                <input
+                                    type="text"
+                                    id="identificacion"
+                                    name="cedula"
+                                    placeholder="Ej. 1-1234-5678"
+                                    required
+                                    style="
+                                        width: 100%;
+                                        padding: 10px 12px;
+                                        border-radius: 8px;
+                                        border: 1px solid #d1d5db;
+                                        font-size: 0.95rem;
+                                        outline: none;
+                                        background: #f9fafb;
+                                    "
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Fila 2 -->
+                        <div
+                            class="form-row"
+                            style="
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                gap: 16px;
+                                margin-bottom: 16px;
+                            "
+                        >
+                            <div class="form-group">
+                                <label
+                                    for="telefono"
+                                    style="
+                                        display: block;
+                                        margin-bottom: 6px;
+                                        font-size: 0.9rem;
+                                        color: #111827;
+                                        font-weight: 500;
+                                    "
+                                >
+                                    Número telefónico del solicitante
+                                    <span
+                                        style="
+                                            color: #dc2626;
+                                            font-weight: bold;
+                                        "
+                                        >*</span
+                                    >
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="telefono"
+                                    name="telefono"
+                                    placeholder="Ej. 8888-8888"
+                                    required
+                                    style="
+                                        width: 100%;
+                                        padding: 10px 12px;
+                                        border-radius: 8px;
+                                        border: 1px solid #d1d5db;
+                                        font-size: 0.95rem;
+                                        outline: none;
+                                        background: #f9fafb;
+                                    "
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    for="grado"
+                                    style="
+                                        display: block;
+                                        margin-bottom: 6px;
+                                        font-size: 0.9rem;
+                                        color: #111827;
+                                        font-weight: 500;
+                                    "
+                                >
+                                    Grado
+                                    <span
+                                        style="
+                                            color: #dc2626;
+                                            font-weight: bold;
+                                        "
+                                        >*</span
+                                    >
+                                </label>
+                                <select
+                                    id="grado"
+                                    name="grado"
+                                    required
+                                    style="
+                                        width: 100%;
+                                        padding: 10px 12px;
+                                        border-radius: 8px;
+                                        border: 1px solid #d1d5db;
+                                        font-size: 0.95rem;
+                                        outline: none;
+                                        background: #f9fafb;
+                                    "
+                                >
+                                    <option value="">
+                                        Seleccione un grado
+                                    </option>
+                                    <option value="bachillerato">
+                                        Bachillerato
+                                    </option>
+                                    <option value="licenciatura">
+                                        Licenciatura
+                                    </option>
+                                    <option value="maestria">Maestría</option>
+                                    <option value="doctorado">Doctorado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Fila 3 -->
+                        <div
+                            class="form-row"
+                            style="
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                gap: 16px;
+                                margin-bottom: 16px;
+                            "
+                        >
+                            <div class="form-group">
+                                <label
+                                    for="universidad"
+                                    style="
+                                        display: block;
+                                        margin-bottom: 6px;
+                                        font-size: 0.9rem;
+                                        color: #111827;
+                                        font-weight: 500;
+                                    "
+                                >
+                                    Universidad
+                                    <span
+                                        style="
+                                            color: #dc2626;
+                                            font-weight: bold;
+                                        "
+                                        >*</span
+                                    >
+                                </label>
+                                <input
+                                    type="text"
+                                    id="universidad"
+                                    name="universidad"
+                                    placeholder="Nombre de la universidad privada"
+                                    required
+                                    style="
+                                        width: 100%;
+                                        padding: 10px 12px;
+                                        border-radius: 8px;
+                                        border: 1px solid #d1d5db;
+                                        font-size: 0.95rem;
+                                        outline: none;
+                                        background: #f9fafb;
+                                    "
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label
+                                    for="sede"
+                                    style="
+                                        display: block;
+                                        margin-bottom: 6px;
+                                        font-size: 0.9rem;
+                                        color: #111827;
+                                        font-weight: 500;
+                                    "
+                                >
+                                    Sede
+                                    <span
+                                        style="
+                                            color: #dc2626;
+                                            font-weight: bold;
+                                        "
+                                        >*</span
+                                    >
+                                </label>
+                                <input
+                                    type="text"
+                                    id="sede"
+                                    name="sede"
+                                    placeholder="Ej. Sede Central, Alajuela"
+                                    required
+                                    style="
+                                        width: 100%;
+                                        padding: 10px 12px;
+                                        border-radius: 8px;
+                                        border: 1px solid #d1d5db;
+                                        font-size: 0.95rem;
+                                        outline: none;
+                                        background: #f9fafb;
+                                    "
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Archivos adjuntos -->
+                        <div class="form-group" style="margin-bottom: 16px">
+                            <label
+                                for="docs"
+                                style="
+                                    display: block;
+                                    margin-bottom: 6px;
+                                    font-size: 0.9rem;
+                                    color: #111827;
+                                    font-weight: 500;
+                                "
+                            >
+                                Archivos adjuntos
+                                <span style="color: #dc2626; font-weight: bold"
+                                    >*</span
+                                >
+                                <span
+                                    style="
+                                        display: inline-flex;
+                                        align-items: center;
+                                        padding: 4px 8px;
+                                        border-radius: 999px;
+                                        font-size: 0.75rem;
+                                        background: #e0f2fe;
+                                        color: #0369a1;
+                                        margin-left: 8px;
+                                    "
+                                    >TRM.Tramite.Documentos</span
+                                >
+                            </label>
+                            <div
+                                style="
+                                    padding: 12px;
+                                    border-radius: 10px;
+                                    border: 1px dashed #9ca3af;
+                                    background: #f9fafb;
+                                "
+                            >
+                                <input
+                                    type="file"
+                                    id="docs"
+                                    name="docs"
+                                    multiple
+                                    style="
+                                        display: block;
+                                        margin-bottom: 8px;
+                                    "
+                                />
+                                <div
+                                    style="
+                                        font-size: 0.8rem;
+                                        color: #6b7280;
+                                        margin-top: 6px;
+                                    "
+                                >
+                                    Adjunte los documentos requeridos por el
+                                    CONESUP (formato PDF, máximo 10 MB por
+                                    archivo). Puede seleccionar varios archivos.
+                                </div>
+                            </div>
+                        </div>
+
+                        <p
+                            style="
+                                margin: 16px 0 0;
+                                font-size: 0.8rem;
+                                color: #6b7280;
+                                line-height: 1.5;
+                            "
+                        >
+                            Al presionar <strong>Enviar</strong>, el sistema
+                            validará que todos los campos estén completos. Si
+                            falta algún dato aparecerá un mensaje de alerta. Si
+                            todo es correcto se mostrará el mensaje:
+                            <em>"Trámite registrado con éxito".</em>
+                        </p>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: flex-end;
+                                gap: 8px;
+                                margin-top: 20px;
+                            "
+                        >
+                            <button
+                                type="reset"
+                                class="btn ghost"
+                                style="padding: 10px 20px"
+                            >
+                                Limpiar formulario
+                            </button>
+                            <button
+                                type="submit"
+                                class="btn primary"
+                                style="padding: 10px 20px"
+                            >
+                                Enviar
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+
+        <script>
+            function logout() {
+                const token = localStorage.getItem("token");
+                const headers = { "Content-Type": "application/json" };
+                if (token) {
+                    headers["Authorization"] = `Bearer ${token}`;
+                }
+                fetch("/api/logout", {
+                    method: "POST",
+                    headers: headers,
+                }).then(() => {
+                    localStorage.removeItem("token");
+                    location.href = "/";
+                });
+            }
+        </script>
+    </body>
+</html>

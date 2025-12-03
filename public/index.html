@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>CONESUP - Inicio</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script defer src="app.js"></script>
+    </head>
+    <body>
+        <div class="app-shell">
+            <header class="topbar">
+                <div class="brand" onclick="location.href='/'">
+                    <div class="logo">C</div>
+                    <h1>CONESUP</h1>
+                </div>
+                <div class="nav-actions">
+                    <button
+                        class="btn ghost"
+                        id="logoutBtn"
+                        onclick="logout()"
+                        style="display: none"
+                    >
+                        Cerrar Sesión
+                    </button>
+                    <button
+                        class="btn primary"
+                        onclick="location.href='login.html'"
+                        id="loginBtn"
+                    >
+                        Iniciar Sesión
+                    </button>
+                    <button
+                        class="btn ghost"
+                        id="tramiteBtn"
+                        style="display: none"
+                    >
+                        ➕ Nuevo Trámite
+                    </button>
+                </div>
+            </header>
+
+            <main class="container">
+                <div style="max-width: 800px; margin: 0 auto">
+                    <!-- HERO SECTION -->
+                    <section
+                        class="card"
+                        style="
+                            text-align: center;
+                            padding: 80px 40px;
+                            background: linear-gradient(
+                                135deg,
+                                #f6f9ff 0%,
+                                #f0f5ff 100%
+                            );
+                        "
+                    >
+                        <div style="margin-bottom: 24px">
+                            <div
+                                style="
+                                    display: inline-block;
+                                    width: 100px;
+                                    height: 100px;
+                                    background: linear-gradient(
+                                        135deg,
+                                        #0b5cff,
+                                        #2563eb
+                                    );
+                                    border-radius: 20px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-size: 50px;
+                                    font-weight: 700;
+                                    color: white;
+                                    box-shadow: 0 20px 40px
+                                        rgba(11, 92, 255, 0.2);
+                                "
+                            >
+                                C
+                            </div>
+                        </div>
+                        <h1
+                            style="
+                                font-size: 48px;
+                                margin: 24px 0 12px 0;
+                                color: #0f1724;
+                                font-weight: 800;
+                            "
+                        >
+                            CONESUP
+                        </h1>
+                        <h2
+                            style="
+                                font-size: 24px;
+                                margin: 0 0 20px 0;
+                                color: #2563eb;
+                                font-weight: 600;
+                            "
+                        >
+                            Gestión de Trámites
+                        </h2>
+                        <p
+                            style="
+                                font-size: 16px;
+                                color: #64748b;
+                                margin-bottom: 40px;
+                                max-width: 500px;
+                                margin-left: auto;
+                                margin-right: auto;
+                                line-height: 1.6;
+                            "
+                        >
+                            Plataforma moderna y segura para administrar tus
+                            solicitudes y documentos con total confianza.
+                        </p>
+                        <div
+                            style="
+                                display: flex;
+                                gap: 12px;
+                                justify-content: center;
+                                flex-wrap: wrap;
+                            "
+                        >
+                            <button
+                                class="btn primary"
+                                id="ctaLoginBtn"
+                                style="
+                                    font-size: 16px;
+                                    padding: 14px 32px;
+                                    cursor: pointer;
+                                "
+                            >
+                                Acceder
+                            </button>
+                            <button
+                                class="btn ghost"
+                                onclick="location.href='login.html'"
+                                style="font-size: 16px; padding: 14px 32px"
+                            >
+                                Crear Cuenta
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- FEATURES -->
+                    <section class="card" style="margin-top: 40px">
+                        <h3 style="font-size: 28px; margin: 0 0 32px 0">
+                            ¿Cómo funciona?
+                        </h3>
+                        <div
+                            style="
+                                display: grid;
+                                grid-template-columns: repeat(
+                                    auto-fit,
+                                    minmax(220px, 1fr)
+                                );
+                                gap: 24px;
+                            "
+                        >
+                            <div
+                                style="
+                                    padding: 24px;
+                                    background: #f8fafc;
+                                    border-radius: 12px;
+                                    border-left: 4px solid #0b5cff;
+                                    text-align: center;
+                                "
+                            >
+                                <div
+                                    style="font-size: 32px; margin-bottom: 12px"
+                                >
+                                    📝
+                                </div>
+                                <div
+                                    style="
+                                        font-weight: 600;
+                                        color: #0f1724;
+                                        margin-bottom: 8px;
+                                        font-size: 16px;
+                                    "
+                                >
+                                    Registrar
+                                </div>
+                                <div
+                                    style="
+                                        font-size: 13px;
+                                        color: #64748b;
+                                        line-height: 1.5;
+                                    "
+                                >
+                                    Crea nuevos trámites con documentos de forma
+                                    rápida.
+                                </div>
+                            </div>
+                            <div
+                                style="
+                                    padding: 24px;
+                                    background: #f8fafc;
+                                    border-radius: 12px;
+                                    border-left: 4px solid #2563eb;
+                                    text-align: center;
+                                "
+                            >
+                                <div
+                                    style="font-size: 32px; margin-bottom: 12px"
+                                >
+                                    📊
+                                </div>
+                                <div
+                                    style="
+                                        font-weight: 600;
+                                        color: #0f1724;
+                                        margin-bottom: 8px;
+                                        font-size: 16px;
+                                    "
+                                >
+                                    Monitorear
+                                </div>
+                                <div
+                                    style="
+                                        font-size: 13px;
+                                        color: #64748b;
+                                        line-height: 1.5;
+                                    "
+                                >
+                                    Sigue el estado en tiempo real desde
+                                    cualquier lugar.
+                                </div>
+                            </div>
+                            <div
+                                style="
+                                    padding: 24px;
+                                    background: #f8fafc;
+                                    border-radius: 12px;
+                                    border-left: 4px solid #1d4ed8;
+                                    text-align: center;
+                                "
+                            >
+                                <div
+                                    style="font-size: 32px; margin-bottom: 12px"
+                                >
+                                    🔒
+                                </div>
+                                <div
+                                    style="
+                                        font-weight: 600;
+                                        color: #0f1724;
+                                        margin-bottom: 8px;
+                                        font-size: 16px;
+                                    "
+                                >
+                                    Seguridad
+                                </div>
+                                <div
+                                    style="
+                                        font-size: 13px;
+                                        color: #64748b;
+                                        line-height: 1.5;
+                                    "
+                                >
+                                    Tus datos protegidos con encriptación.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+            <footer class="site-footer">
+                © 2025 CONESUP. Todos los derechos reservados.
+            </footer>
+        </div>
+
+        <script>
+            // Check authentication on load
+            async function checkAuth() {
+                const token = localStorage.getItem("token");
+                const headers = { "Content-Type": "application/json" };
+                if (token) {
+                    headers["Authorization"] = `Bearer ${token}`;
+                }
+                const session = await fetch("/api/session", { headers }).then(
+                    (r) => r.json()
+                );
+                const loginBtn = document.getElementById("loginBtn");
+                const logoutBtn = document.getElementById("logoutBtn");
+                const tramiteBtn = document.getElementById("tramiteBtn");
+                const ctaLoginBtn = document.getElementById("ctaLoginBtn");
+
+                if (session.authenticated) {
+                    // Authenticated user
+                    loginBtn.style.display = "none";
+                    logoutBtn.style.display = "inline-block";
+                    tramiteBtn.style.display = "inline-block";
+                    tramiteBtn.onclick = () => {
+                        if (session.user.rol === "Funcionario") {
+                            location.href = "/admin.html";
+                        } else {
+                            location.href = "/register.html";
+                        }
+                    };
+                    tramiteBtn.innerText =
+                        session.user.rol === "Funcionario"
+                            ? "📋 Bandeja"
+                            : "➕ Nuevo Trámite";
+                    ctaLoginBtn.innerText = "Mi Panel";
+                    ctaLoginBtn.onclick = () => {
+                        if (session.user.rol === "Funcionario") {
+                            location.href = "/admin.html";
+                        } else {
+                            location.href = "/my_tramites.html";
+                        }
+                    };
+                } else {
+                    // Not authenticated
+                    loginBtn.style.display = "inline-block";
+                    logoutBtn.style.display = "none";
+                    tramiteBtn.style.display = "none";
+                    ctaLoginBtn.onclick = () => {
+                        location.href = "/login.html";
+                    };
+                }
+            }
+
+            function logout() {
+                const token = localStorage.getItem("token");
+                const headers = { "Content-Type": "application/json" };
+                if (token) {
+                    headers["Authorization"] = `Bearer ${token}`;
+                }
+                fetch("/api/logout", {
+                    method: "POST",
+                    headers: headers,
+                }).then(() => {
+                    localStorage.removeItem("token");
+                    location.href = "/";
+                });
+            }
+
+            window.addEventListener("load", checkAuth);
+        </script>
+    </body>
+</html>

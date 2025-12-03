@@ -1,0 +1,20 @@
+[
+  {
+    "id": "aec79dd6-450b-498d-b958-9155042f5f28",
+    "nombre": "Joseph",
+    "email": "josephgray514@gmail.com",
+    "cedula": "1",
+    "rol": "Estudiante",
+    "sesion": 1,
+    "fechaRegistro": "2025-12-03T21:46:00.124Z"
+  },
+  {
+    "id": "ba86b767-6d18-4b55-8f13-51e941300c6c",
+    "nombre": "Joseph2",
+    "email": "josephgray514@gmail.com2",
+    "cedula": "2",
+    "rol": "Funcionario",
+    "sesion": 0,
+    "fechaRegistro": "2025-12-03T21:46:27.862Z"
+  }
+]

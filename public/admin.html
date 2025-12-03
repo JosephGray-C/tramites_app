@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Bandeja de Funcionario - CONESUP</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script defer src="app.js"></script>
+    </head>
+    <body>
+        <div class="app-shell">
+            <header class="topbar">
+                <div class="brand" onclick="location.href='/'">
+                    <div class="logo">C</div>
+                    <h1>CONESUP</h1>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn ghost" id="userInfo">Funcionario</button>
+                    <button class="btn ghost" onclick="logout()">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </header>
+
+            <main class="container">
+                <section class="card">
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 20px;
+                        "
+                    >
+                        <div>
+                            <h3 style="margin: 0 0 4px 0">
+                                Bandeja de Trámites
+                            </h3>
+                            <p
+                                style="
+                                    color: #64748b;
+                                    font-size: 13px;
+                                    margin: 0;
+                                "
+                            >
+                                Revisión y seguimiento de todos los trámites
+                            </p>
+                        </div>
+                        <button id="loadAll" class="btn primary">
+                            ⬇️ Cargar Todos
+                        </button>
+                    </div>
+
+                    <div id="table" style="margin-top: 20px">
+                        <div class="muted-small">
+                            Haz clic en "Cargar Todos" para ver los trámites en
+                            revisión
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <script>
+            function logout() {
+                fetch("/api/logout", { method: "POST" }).then(() => {
+                    location.href = "/login.html";
+                });
+            }
+
+            // Show user info
+            window.addEventListener("load", async () => {
+                const session = await fetch("/api/session").then((r) =>
+                    r.json()
+                );
+                if (session.authenticated && session.user) {
+                    document.getElementById(
+                        "userInfo"
+                    ).innerText = `${session.user.nombre} (${session.user.rol})`;
+                }
+            });
+        </script>
+    </body>
+</html>
