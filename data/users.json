@@ -5,7 +5,7 @@
     "email": "josephgray514@gmail.com",
     "cedula": "1",
     "rol": "Estudiante",
-    "sesion": 1,
+    "sesion": 0,
     "fechaRegistro": "2025-12-03T21:46:00.124Z"
   },
   {
@@ -16,5 +16,23 @@
     "rol": "Funcionario",
     "sesion": 0,
     "fechaRegistro": "2025-12-03T21:46:27.862Z"
+  },
+  {
+    "id": "7d807fbc-2e3b-4f80-9911-aeeb8ae29feb",
+    "nombre": "3",
+    "email": "3@gmail.com",
+    "cedula": "3",
+    "rol": "Funcionario",
+    "sesion": 0,
+    "fechaRegistro": "2025-12-05T04:22:54.220Z"
+  },
+  {
+    "id": "e41beb59-a3de-4c9d-86b7-0dcf8c43ae55",
+    "nombre": "4",
+    "email": "4@gmail.com",
+    "cedula": "4",
+    "rol": "Delegado",
+    "sesion": 0,
+    "fechaRegistro": "2025-12-05T04:30:41.617Z"
   }
 ]

@@ -87,6 +87,28 @@ function showToast(message, type = 'info', timeout = 3500) {
     setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 250); }, timeout);
 }
 
+// Download document using fetch with Authorization header
+async function downloadDocument(tramiteId, fileName) {
+    const token = getToken();
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    try {
+        const res = await fetch(`/api/tramites/${tramiteId}/document/${fileName}`, { headers });
+        if (!res.ok) throw new Error('No se pudo descargar el documento');
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (err) {
+        showModal('Error', err.message || 'Error al descargar documento', 'error');
+    }
+}
+
 function showModal(title, message, type = 'info', okLabel = 'Aceptar') {
     const overlay = document.createElement('div'); overlay.className = 'modal-overlay';
     const modal = document.createElement('div'); modal.className = 'modal';
@@ -243,13 +265,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (t.documentos && t.documentos.length) {
                     t.documentos.forEach(d => {
-                        const a = document.createElement('a');
-                        a.href = `/api/tramites/${t.id}/document/${d.file}`;
-                        a.innerText = d.name;
-                        a.style.display = 'block';
-                        a.style.fontSize = '12px';
-                        a.style.marginTop = '4px';
-                        actions.appendChild(a);
+                        const link = document.createElement('button');
+                        link.className = 'doc-link';
+                        link.type = 'button';
+                        link.innerText = d.name;
+                        link.style.display = 'block';
+                        link.style.fontSize = '12px';
+                        link.style.marginTop = '6px';
+                        link.onclick = () => downloadDocument(t.id, d.file);
+                        actions.appendChild(link);
                     });
                 }
                 tbody.appendChild(tr);
@@ -285,9 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.onclick = async () => {
                     const estado = sel.value;
                     if (!estado) return showToast('Seleccione un estado', 'warning');
+                    const token = getToken();
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (token) headers['Authorization'] = `Bearer ${token}`;
                     const res = await fetch(`/api/tramites/${t.id}/state`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers,
                         body: JSON.stringify({ estado })
                     });
                     const rj = await res.json();
@@ -298,13 +325,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 actions.appendChild(btn);
                 if (t.documentos && t.documentos.length) {
                     t.documentos.forEach(d => {
-                        const a = document.createElement('a');
-                        a.href = `/api/tramites/${t.id}/document/${d.file}`;
-                        a.innerText = d.name;
-                        a.style.display = 'block';
-                        a.style.fontSize = '12px';
-                        a.style.marginTop = '4px';
-                        actions.appendChild(a);
+                        const link = document.createElement('button');
+                        link.className = 'doc-link';
+                        link.type = 'button';
+                        link.innerText = d.name;
+                        link.style.display = 'block';
+                        link.style.fontSize = '12px';
+                        link.style.marginTop = '6px';
+                        link.onclick = () => downloadDocument(t.id, d.file);
+                        actions.appendChild(link);
                     });
                 }
                 tbody.appendChild(tr);
@@ -360,8 +389,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('resendForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const fd = new FormData(e.target);
+            const token = getToken();
+            const headers = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
             const res = await fetch(`/api/tramites/${t.id}/resend`, {
                 method: 'POST',
+                headers,
                 body: fd
             });
             const j = await res.json();

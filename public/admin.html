@@ -63,15 +63,22 @@
 
         <script>
             function logout() {
-                fetch("/api/logout", { method: "POST" }).then(() => {
+                const token = localStorage.getItem("token");
+                const headers = { "Content-Type": "application/json" };
+                if (token) headers["Authorization"] = `Bearer ${token}`;
+                fetch("/api/logout", { method: "POST", headers }).then(() => {
+                    localStorage.removeItem("token");
                     location.href = "/login.html";
                 });
             }
 
             // Show user info
             window.addEventListener("load", async () => {
-                const session = await fetch("/api/session").then((r) =>
-                    r.json()
+                const token = localStorage.getItem("token");
+                const headers = { "Content-Type": "application/json" };
+                if (token) headers["Authorization"] = `Bearer ${token}`;
+                const session = await fetch("/api/session", { headers }).then(
+                    (r) => r.json()
                 );
                 if (session.authenticated && session.user) {
                     document.getElementById(

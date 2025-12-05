@@ -4,8 +4,8 @@
     "version": 1,
     "tipo": "General",
     "fechaCreacion": "2025-12-03T22:31:56.670Z",
-    "fechaActualizacion": "2025-12-03T22:31:56.670Z",
-    "estado": "Pendiente",
+    "fechaActualizacion": "2025-12-05T04:25:28.279Z",
+    "estado": "Aprobado",
     "datos": {
       "nombre": "Joseph",
       "cedula": "1",
@@ -22,6 +22,15 @@
       }
     ],
     "usuarioCreador": "josephgray514@gmail.com",
-    "historial": []
+    "historial": [
+      {
+        "accion": "cambio_estado",
+        "desde": "Pendiente",
+        "hasta": "Aprobado",
+        "usuario": "3@gmail.com",
+        "fecha": "2025-12-05T04:25:28.279Z"
+      }
+    ],
+    "usuarioActualiza": "3@gmail.com"
   }
 ]

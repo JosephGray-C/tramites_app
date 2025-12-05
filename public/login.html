@@ -256,6 +256,16 @@
                     document.getElementById("registerForm").reset();
                 }
             }
+
+            // Select tab from URL hash (e.g. login.html#register)
+            window.addEventListener("load", () => {
+                try {
+                    const hash = (window.location.hash || "").replace("#", "");
+                    if (hash === "register") switchTab("register");
+                } catch (e) {
+                    // ignore
+                }
+            });
         </script>
     </body>
 </html>
