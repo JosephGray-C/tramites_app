@@ -33,7 +33,9 @@ window.addEventListener('load', async () => {
     if (!session.authenticated && protectedPages.includes(currentPage)) {
         window.location.href = '/login.html';
     }
-});// Beautiful MFA modal popup
+});
+
+// Beautiful MFA modal popup
 function showMFAModal(code) {
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
@@ -196,10 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
-            const res = await fetch('/api/tramites', { 
-                method: 'POST', 
+            const res = await fetch('/api/tramites', {
+                method: 'POST',
                 headers: headers,
-                body: fd 
+                body: fd
             });
             const j = await res.json();
             if (j.error) {

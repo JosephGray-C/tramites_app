@@ -1,429 +1,561 @@
-
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8" />
-    <title>CONESUP - Consulta y seguimiento de trámites</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="styles.css" />
-    <style>
-        body {
-            background: #f8fafc;
-        }
-        .card {
-            box-shadow: 0 4px 24px rgba(37,99,235,0.07);
-            border-radius: 18px;
-            padding: 32px 32px 28px;
-            margin-top: 32px;
-        }
-        .meta-info {
-            font-size: 0.95rem;
-            color: #475569;
-            margin-bottom: 18px;
-        }
-        h2 {
-            font-size: 1.35rem;
-            margin-bottom: 8px;
-            color: #1e293b;
-        }
-        .help-text {
-            color: #64748b;
-            font-size: 1rem;
-            margin-bottom: 18px;
-        }
-        .filter-bar {
-            margin-bottom: 18px;
-        }
-        .filter-group label {
-            font-weight: 500;
-            color: #334155;
-            margin-bottom: 4px;
-        }
-        .filter-group input, .filter-group select {
-            border-radius: 10px;
-            border: 1px solid #d1d5db;
-            padding: 8px 12px;
-            font-size: 1rem;
-            background: #f1f5f9;
-            margin-bottom: 0;
-        }
-        .filter-actions {
-            margin-bottom: 18px;
-        }
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(37,99,235,0.13);
-            transition: background 0.15s;
-        }
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-        .btn-secondary {
-            background: #e0e7ef;
-            color: #1e293b;
-        }
-        .table-container {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(37,99,235,0.05);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 1rem;
-            background: white;
-        }
-        thead {
-            background: #f1f5f9;
-        }
-        th, td {
-            padding: 12px 10px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        tbody tr:hover {
-            background: #f3f4f6;
-            transition: background 0.15s;
-        }
-        th {
-            font-weight: 600;
-            color: #1e293b;
-        }
-        td {
-            color: #334155;
-        }
-        .badge-estado {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 999px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-        }
-        .estado-pendiente { background: #fef3c7; color: #92400e; }
-        .estado-en_revision { background: #dbeafe; color: #1d4ed8; }
-        .estado-aprobado { background: #dcfce7; color: #166534; }
-        .estado-rechazado { background: #fee2e2; color: #b91c1c; }
-        .estado-archivado { background: #e5e7eb; color: #374151; }
-        .actions .btn-outline {
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            background: #f8fafc;
-            color: #2563eb;
-            font-weight: 500;
-            padding: 6px 16px;
-            transition: background 0.15s;
-        }
-        .actions .btn-outline:hover {
-            background: #e0e7ef;
-        }
-        @media (max-width: 900px) {
-            .card { padding: 18px 6px; }
-            th, td { font-size: 0.95rem; }
-        }
-    </style>
-    <script defer src="app.js"></script>
-</head>
-<body>
-<div class="app-shell">
-    <header class="topbar">
-        <div class="brand" onclick="location.href='/'">
-            <div class="logo">C</div>
-            <h1>CONESUP</h1>
-        </div>
-        <div class="nav-actions">
-            <button class="btn ghost" onclick="location.href='register.html'">Nuevo Trámite</button>
-            <button class="btn ghost" onclick="logout()">Cerrar Sesión</button>
-        </div>
-    </header>
-
-    <main class="container">
-        <section class="card">
-            <div class="meta-info">
-                <span><strong>Módulo:</strong> Gestión de Trámites</span>
-                <span><strong>Relación RF:</strong> RF-001, RF-002, RF-003</span>
-            </div>
-
-            <h2>Mis trámites registrados</h2>
-            <p class="help-text">
-                Use los filtros para localizar un trámite por ID, tipo, estado o rango de fechas.
-                Esta vista es solo de consulta, no permite modificar estados.
-            </p>
-
-            <!-- Filtros -->
-            <div class="filter-bar">
-                <div class="filter-group">
-                    <label for="filtroTexto">Buscar (ID, tipo, universidad)</label>
-                    <input type="text" id="filtroTexto" placeholder="Ej. TRM-2025-001, Ingeniería, Universidad...">
-                </div>
-                <div class="filter-group">
-                    <label for="filtroEstado">Estado</label>
-                    <select id="filtroEstado">
-                        <option value="">Todos</option>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="en_revision">En revisión</option>
-                        <option value="aprobado">Aprobado</option>
-                        <option value="rechazado">Rechazado</option>
-                        <option value="archivado">Archivado</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="filtroTipo">Tipo de trámite</label>
-                    <select id="filtroTipo">
-                        <option value="">Todos</option>
-                        <option value="reconocimiento">Reconocimiento de grado</option>
-                        <option value="acreditacion">Acreditación de carrera</option>
-                        <option value="modificacion">Modificación de plan</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="filtroFecha">Fecha creación (año)</label>
-                    <select id="filtroFecha">
-                        <option value="">Todas</option>
-                        <option value="2025">2025</option>
-                    </select>
-                </div>
-            </div>
-            <div class="filter-actions">
-                <button class="btn-secondary" id="btnLimpiarFiltros">Limpiar filtros</button>
-                <button class="btn-primary" id="btnAplicarFiltros">Aplicar filtros</button>
-            </div>
-
-            <!-- Tabla -->
-            <div class="table-container">
-                <table id="tablaTramites">
-                    <thead>
-                    <tr>
-                        <th>ID trámite</th>
-                        <th>Tipo</th>
-                        <th>Universidad</th>
-                        <th>Fecha creación</th>
-                        <th>Estado</th>
-                        <th>Último movimiento</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Las filas se llenarán dinámicamente con JS -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-</div>
-
-<!-- MODAL DETALLE -->
-<div id="modalDetalle" class="modal-overlay">
-    <div class="modal" role="dialog" aria-modal="true">
-        <div class="modal-header">
-            <div>
-                <div class="modal-title">Detalle del trámite</div>
-                <div class="modal-subtitle">
-                    Información general y estado actual del trámite seleccionado.
-                </div>
-            </div>
-            <button class="btn-close" data-close-modal="modalDetalle">Cerrar</button>
-        </div>
-        <div class="modal-body">
-            <dl>
-                <dt>ID trámite</dt>
-                <dd id="det-id"></dd>
-                <dt>Tipo de trámite</dt>
-                <dd id="det-tipo"></dd>
-                <dt>Universidad</dt>
-                <dd id="det-universidad"></dd>
-                <dt>Fecha de creación</dt>
-                <dd id="det-fecha"></dd>
-                <dt>Estado actual</dt>
-                <dd id="det-estado"></dd>
-                <dt>Último movimiento</dt>
-                <dd id="det-movimiento"></dd>
-            </dl>
-            <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">
-                Para reenviar un trámite rechazado, utilice la opción correspondiente en la pantalla de
-                “Reenvío de solicitudes rechazadas”.
-            </p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-close" data-close-modal="modalDetalle">Cerrar</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL ERROR FILTROS (opcional) -->
-<div id="modalError" class="modal-overlay">
-    <div class="modal modal-simple" role="dialog" aria-modal="true">
-        <div class="modal-header" style="margin-bottom:6px;">
-            <div class="modal-icon error">!</div>
-            <div class="modal-title">Sin resultados</div>
-        </div>
-        <div class="modal-body">
-            No se encontraron trámites con los criterios de búsqueda especificados.
-        </div>
-        <div class="modal-footer">
-            <button class="btn-close" data-close-modal="modalError">Cerrar</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    function getToken() {
-        return localStorage.getItem('token');
-    }
-    function logout() {
-        fetch("/api/logout", {
-            method: "POST",
-            headers: { 'Authorization': 'Bearer ' + getToken() }
-        }).then(() => {
-            localStorage.removeItem('token');
-            location.href = "/login.html";
-        });
-    }
-
-    function mostrarModal(id) {
-        const overlay = document.getElementById(id);
-        if (overlay) overlay.style.display = "flex";
-    }
-    function cerrarModal(id) {
-        const overlay = document.getElementById(id);
-        if (overlay) overlay.style.display = "none";
-    }
-    document.querySelectorAll(".modal-overlay").forEach((overlay) => {
-        overlay.addEventListener("click", (e) => {
-            if (e.target === overlay) overlay.style.display = "none";
-        });
-    });
-    document.querySelectorAll("[data-close-modal]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const id = btn.getAttribute("data-close-modal");
-            cerrarModal(id);
-        });
-    });
-
-    // Render trámites from backend
-    async function cargarTramites() {
-        const token = getToken();
-        const tbody = document.querySelector('#tablaTramites tbody');
-        tbody.innerHTML = '';
-        try {
-            const res = await fetch('/api/tramites', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            });
-            if (!res.ok) throw new Error('No se pudo cargar trámites');
-            const tramites = await res.json();
-            if (!Array.isArray(tramites) || tramites.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#888">No hay trámites registrados</td></tr>';
-                return;
+    <head>
+        <meta charset="UTF-8" />
+        <title>CONESUP - Consulta y seguimiento de trámites</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="styles.css" />
+        <style>
+            body {
+                background: #f8fafc;
             }
-            tramites.forEach(t => {
-                // Extract fields with fallback values
-                const id = t.id || '—';
-                const tipo = t.datos?.tipo || 'Sin tipo';
-                const universidad = t.datos?.universidad || 'Sin universidad';
-                const fecha = t.datos?.fecha || (t.fechaCreacion || '—');
-                const estado = t.estado || 'Sin estado';
-                const ultimo = (t.historial && t.historial.length > 0 && t.historial[t.historial.length-1].fecha) ? t.historial[t.historial.length-1].fecha : fecha;
-                // Estado badge
-                let estadoClass = '';
-                if (estado === 'pendiente') estadoClass = 'estado-pendiente';
-                else if (estado === 'en_revision') estadoClass = 'estado-en_revision';
-                else if (estado === 'aprobado') estadoClass = 'estado-aprobado';
-                else if (estado === 'rechazado') estadoClass = 'estado-rechazado';
-                else if (estado === 'archivado') estadoClass = 'estado-archivado';
-                else estadoClass = 'estado-pendiente';
-                // Row
-                const row = document.createElement('tr');
-                row.setAttribute('data-estado', estado);
-                row.setAttribute('data-tipo', tipo.toLowerCase());
-                row.setAttribute('data-fecha', fecha ? fecha.substring(0,4) : '');
-                row.setAttribute('data-busqueda', `${id} ${tipo} ${universidad}`.toLowerCase());
-                row.innerHTML = `
+            .card {
+                box-shadow: 0 4px 24px rgba(37, 99, 235, 0.07);
+                border-radius: 18px;
+                padding: 32px 32px 28px;
+                margin-top: 32px;
+            }
+            .meta-info {
+                font-size: 0.95rem;
+                color: #475569;
+                margin-bottom: 18px;
+            }
+            h2 {
+                font-size: 1.35rem;
+                margin-bottom: 8px;
+                color: #1e293b;
+            }
+            .help-text {
+                color: #64748b;
+                font-size: 1rem;
+                margin-bottom: 18px;
+            }
+            .filter-bar {
+                margin-bottom: 18px;
+            }
+            .filter-group label {
+                font-weight: 500;
+                color: #334155;
+                margin-bottom: 4px;
+            }
+            .filter-group input,
+            .filter-group select {
+                border-radius: 10px;
+                border: 1px solid #d1d5db;
+                padding: 8px 12px;
+                font-size: 1rem;
+                background: #f1f5f9;
+                margin-bottom: 0;
+            }
+            .filter-actions {
+                margin-bottom: 18px;
+            }
+            .btn-primary {
+                background: #2563eb;
+                color: white;
+                font-weight: 500;
+                box-shadow: 0 2px 8px rgba(37, 99, 235, 0.13);
+                transition: background 0.15s;
+            }
+            .btn-primary:hover {
+                background: #1d4ed8;
+            }
+            .btn-secondary {
+                background: #e0e7ef;
+                color: #1e293b;
+            }
+            .table-container {
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 2px 12px rgba(37, 99, 235, 0.05);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 1rem;
+                background: white;
+            }
+            thead {
+                background: #f1f5f9;
+            }
+            th,
+            td {
+                padding: 12px 10px;
+                text-align: left;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            tbody tr:hover {
+                background: #f3f4f6;
+                transition: background 0.15s;
+            }
+            th {
+                font-weight: 600;
+                color: #1e293b;
+            }
+            td {
+                color: #334155;
+            }
+            .badge-estado {
+                display: inline-block;
+                padding: 4px 14px;
+                border-radius: 999px;
+                font-size: 0.95rem;
+                font-weight: 500;
+                letter-spacing: 0.01em;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            }
+            .estado-pendiente {
+                background: #fef3c7;
+                color: #92400e;
+            }
+            .estado-en_revision {
+                background: #dbeafe;
+                color: #1d4ed8;
+            }
+            .estado-aprobado {
+                background: #dcfce7;
+                color: #166534;
+            }
+            .estado-rechazado {
+                background: #fee2e2;
+                color: #b91c1c;
+            }
+            .estado-archivado {
+                background: #e5e7eb;
+                color: #374151;
+            }
+            .actions .btn-outline {
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                background: #f8fafc;
+                color: #2563eb;
+                font-weight: 500;
+                padding: 6px 16px;
+                transition: background 0.15s;
+            }
+            .actions .btn-outline:hover {
+                background: #e0e7ef;
+            }
+            /* Modales: ocultos por defecto */
+            .modal-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 23, 42, 0.35);
+                display: none; /* oculto inicialmente */
+                align-items: center;
+                justify-content: center;
+                z-index: 999;
+            }
+            .modal {
+                background: white;
+                border-radius: 12px;
+                padding: 18px 20px;
+                max-width: 680px;
+                width: 92%;
+                box-shadow: 0 18px 40px rgba(2,6,23,0.25);
+            }
+            .modal-simple { max-width: 380px; }
+            .modal-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+            .modal-title { font-weight:600; color:#0f172a; }
+            .modal-subtitle { color:#475569; font-size:0.94rem; }
+            @media (max-width: 900px) {
+                .card {
+                    padding: 18px 6px;
+                }
+                th,
+                td {
+                    font-size: 0.95rem;
+                }
+            }
+        </style>
+        <script defer src="app.js"></script>
+    </head>
+    <body>
+        <div class="app-shell">
+            <header class="topbar">
+                <div class="brand" onclick="location.href='/'">
+                    <div class="logo">C</div>
+                    <h1>CONESUP</h1>
+                </div>
+                <div class="nav-actions">
+                    <button
+                        class="btn ghost"
+                        onclick="location.href='register.html'"
+                    >
+                        Nuevo Trámite
+                    </button>
+                    <button class="btn ghost" onclick="logout()">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </header>
+
+            <main class="container">
+                <section class="card">
+                    <div class="meta-info">
+                        <span
+                            ><strong>Módulo:</strong> Gestión de Trámites</span
+                        >
+                        <span
+                            ><strong>Relación RF:</strong> RF-001, RF-002,
+                            RF-003</span
+                        >
+                    </div>
+
+                    <h2>Mis trámites registrados</h2>
+                    <p class="help-text">
+                        Use los filtros para localizar un trámite por ID, tipo,
+                        estado o rango de fechas. Esta vista es solo de
+                        consulta, no permite modificar estados.
+                    </p>
+
+                    <!-- Filtros -->
+                    <div class="filter-bar">
+                        <div class="filter-group">
+                            <label for="filtroTexto"
+                                >Buscar (ID, tipo, universidad)</label
+                            >
+                            <input
+                                type="text"
+                                id="filtroTexto"
+                                placeholder="Ej. TRM-2025-001, Ingeniería, Universidad..."
+                            />
+                        </div>
+                        <div class="filter-group">
+                            <label for="filtroEstado">Estado</label>
+                            <select id="filtroEstado">
+                                <option value="">Todos</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="en_revision">En revisión</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="rechazado">Rechazado</option>
+                                <option value="archivado">Archivado</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filtroTipo">Tipo de trámite</label>
+                            <select id="filtroTipo">
+                                <option value="">Todos</option>
+                                <option value="reconocimiento">
+                                    Reconocimiento de grado
+                                </option>
+                                <option value="acreditacion">
+                                    Acreditación de carrera
+                                </option>
+                                <option value="modificacion">
+                                    Modificación de plan
+                                </option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filtroFecha"
+                                >Fecha creación (año)</label
+                            >
+                            <select id="filtroFecha">
+                                <option value="">Todas</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn-secondary" id="btnLimpiarFiltros">
+                            Limpiar filtros
+                        </button>
+                        <button class="btn-primary" id="btnAplicarFiltros">
+                            Aplicar filtros
+                        </button>
+                    </div>
+
+                    <!-- Tabla -->
+                    <div class="table-container">
+                        <table id="tablaTramites">
+                            <thead>
+                                <tr>
+                                    <th>ID trámite</th>
+                                    <th>Tipo</th>
+                                    <th>Universidad</th>
+                                    <th>Fecha creación</th>
+                                    <th>Estado</th>
+                                    <th>Último movimiento</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Las filas se llenarán dinámicamente con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- MODAL DETALLE -->
+        <div id="modalDetalle" class="modal-overlay">
+            <div class="modal" role="dialog" aria-modal="true">
+                <div class="modal-header">
+                    <div>
+                        <div class="modal-title">Detalle del trámite</div>
+                        <div class="modal-subtitle">
+                            Información general y estado actual del trámite
+                            seleccionado.
+                        </div>
+                    </div>
+                    <button class="btn-close" data-close-modal="modalDetalle">
+                        Cerrar
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <dl>
+                        <dt>ID trámite</dt>
+                        <dd id="det-id"></dd>
+                        <dt>Tipo de trámite</dt>
+                        <dd id="det-tipo"></dd>
+                        <dt>Universidad</dt>
+                        <dd id="det-universidad"></dd>
+                        <dt>Fecha de creación</dt>
+                        <dd id="det-fecha"></dd>
+                        <dt>Estado actual</dt>
+                        <dd id="det-estado"></dd>
+                        <dt>Último movimiento</dt>
+                        <dd id="det-movimiento"></dd>
+                    </dl>
+                    <p
+                        style="
+                            font-size: 0.8rem;
+                            color: #6b7280;
+                            margin-top: 8px;
+                        "
+                    >
+                        Para reenviar un trámite rechazado, utilice la opción
+                        correspondiente en la pantalla de “Reenvío de
+                        solicitudes rechazadas”.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-close" data-close-modal="modalDetalle">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL ERROR FILTROS (opcional) -->
+        <div id="modalError" class="modal-overlay">
+            <div class="modal modal-simple" role="dialog" aria-modal="true">
+                <div class="modal-header" style="margin-bottom: 6px">
+                    <div class="modal-icon error">!</div>
+                    <div class="modal-title">Sin resultados</div>
+                </div>
+                <div class="modal-body">
+                    No se encontraron trámites con los criterios de búsqueda
+                    especificados.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-close" data-close-modal="modalError">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function getToken() {
+                return localStorage.getItem("token");
+            }
+            function logout() {
+                fetch("/api/logout", {
+                    method: "POST",
+                    headers: { Authorization: "Bearer " + getToken() },
+                }).then(() => {
+                    localStorage.removeItem("token");
+                    location.href = "/login.html";
+                });
+            }
+
+            function mostrarModal(id) {
+                const overlay = document.getElementById(id);
+                if (overlay) overlay.style.display = "flex";
+            }
+            function cerrarModal(id) {
+                const overlay = document.getElementById(id);
+                if (overlay) overlay.style.display = "none";
+            }
+            document.querySelectorAll(".modal-overlay").forEach((overlay) => {
+                overlay.addEventListener("click", (e) => {
+                    if (e.target === overlay) overlay.style.display = "none";
+                });
+            });
+            document.querySelectorAll("[data-close-modal]").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-close-modal");
+                    cerrarModal(id);
+                });
+            });
+
+            // Render trámites from backend
+            async function cargarTramites() {
+                const token = getToken();
+                const tbody = document.querySelector("#tablaTramites tbody");
+                tbody.innerHTML = "";
+                try {
+                    const res = await fetch("/api/tramites", {
+                        headers: { Authorization: "Bearer " + token },
+                    });
+                    if (!res.ok) throw new Error("No se pudo cargar trámites");
+                    const tramites = await res.json();
+                    if (!Array.isArray(tramites) || tramites.length === 0) {
+                        tbody.innerHTML =
+                            '<tr><td colspan="7" style="text-align:center;color:#888">No hay trámites registrados</td></tr>';
+                        return;
+                    }
+                    tramites.forEach((t) => {
+                        // Extract fields with fallback values
+                        const id = t.id || "—";
+                        const tipo = t.datos?.tipo || "Sin tipo";
+                        const universidad =
+                            t.datos?.universidad || "Sin universidad";
+                        const fecha = t.datos?.fecha || t.fechaCreacion || "—";
+                        const estado = t.estado || "Sin estado";
+                        const ultimo =
+                            t.historial &&
+                            t.historial.length > 0 &&
+                            t.historial[t.historial.length - 1].fecha
+                                ? t.historial[t.historial.length - 1].fecha
+                                : fecha;
+                        // Estado badge
+                        let estadoClass = "";
+                        if (estado === "pendiente")
+                            estadoClass = "estado-pendiente";
+                        else if (estado === "en_revision")
+                            estadoClass = "estado-en_revision";
+                        else if (estado === "aprobado")
+                            estadoClass = "estado-aprobado";
+                        else if (estado === "rechazado")
+                            estadoClass = "estado-rechazado";
+                        else if (estado === "archivado")
+                            estadoClass = "estado-archivado";
+                        else estadoClass = "estado-pendiente";
+                        // Row
+                        const row = document.createElement("tr");
+                        row.setAttribute("data-estado", estado);
+                        row.setAttribute("data-tipo", tipo.toLowerCase());
+                        row.setAttribute(
+                            "data-fecha",
+                            fecha ? fecha.substring(0, 4) : ""
+                        );
+                        row.setAttribute(
+                            "data-busqueda",
+                            `${id} ${tipo} ${universidad}`.toLowerCase()
+                        );
+                        row.innerHTML = `
                     <td>${id}</td>
                     <td>${tipo}</td>
                     <td>${universidad}</td>
                     <td>${fecha}</td>
-                    <td><span class="badge-estado ${estadoClass}">${estado.charAt(0).toUpperCase() + estado.slice(1).replace('_',' ')}</span></td>
-                    <td>${ultimo || '—'}</td>
+                    <td><span class="badge-estado ${estadoClass}">${
+                            estado.charAt(0).toUpperCase() +
+                            estado.slice(1).replace("_", " ")
+                        }</span></td>
+                    <td>${ultimo || "—"}</td>
                     <td><div class="actions"><button class="btn-outline btn-ver-detalle">Ver detalle</button></div></td>
                 `;
-                tbody.appendChild(row);
+                        tbody.appendChild(row);
+                    });
+                } catch (err) {
+                    tbody.innerHTML =
+                        '<tr><td colspan="7" style="text-align:center;color:#b91c1c">Error al cargar trámites</td></tr>';
+                }
+            }
+
+            // Ver detalle
+            document.addEventListener("click", function (e) {
+                if (e.target.classList.contains("btn-ver-detalle")) {
+                    const fila = e.target.closest("tr");
+                    const celdas = fila.children;
+                    document.getElementById("det-id").textContent =
+                        celdas[0].textContent;
+                    document.getElementById("det-tipo").textContent =
+                        celdas[1].textContent;
+                    document.getElementById("det-universidad").textContent =
+                        celdas[2].textContent;
+                    document.getElementById("det-fecha").textContent =
+                        celdas[3].textContent;
+                    document.getElementById("det-estado").textContent =
+                        celdas[4].innerText;
+                    document.getElementById("det-movimiento").textContent =
+                        celdas[5].textContent;
+                    mostrarModal("modalDetalle");
+                }
             });
-        } catch (err) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#b91c1c">Error al cargar trámites</td></tr>';
-        }
-    }
 
-    // Ver detalle
-    document.addEventListener("click", function(e) {
-        if (e.target.classList.contains("btn-ver-detalle")) {
-            const fila = e.target.closest("tr");
-            const celdas = fila.children;
-            document.getElementById("det-id").textContent = celdas[0].textContent;
-            document.getElementById("det-tipo").textContent = celdas[1].textContent;
-            document.getElementById("det-universidad").textContent = celdas[2].textContent;
-            document.getElementById("det-fecha").textContent = celdas[3].textContent;
-            document.getElementById("det-estado").textContent = celdas[4].innerText;
-            document.getElementById("det-movimiento").textContent = celdas[5].textContent;
-            mostrarModal("modalDetalle");
-        }
-    });
+            // Filtros
+            function aplicarFiltros() {
+                const texto = document
+                    .getElementById("filtroTexto")
+                    .value.toLowerCase()
+                    .trim();
+                const estado = document.getElementById("filtroEstado").value;
+                const tipo = document.getElementById("filtroTipo").value;
+                const fecha = document.getElementById("filtroFecha").value;
 
-    // Filtros
-    function aplicarFiltros() {
-        const texto = document.getElementById("filtroTexto").value.toLowerCase().trim();
-        const estado = document.getElementById("filtroEstado").value;
-        const tipo = document.getElementById("filtroTipo").value;
-        const fecha = document.getElementById("filtroFecha").value;
+                const filas = document.querySelectorAll(
+                    "#tablaTramites tbody tr"
+                );
+                let visibles = 0;
 
-        const filas = document.querySelectorAll("#tablaTramites tbody tr");
-        let visibles = 0;
+                filas.forEach((fila) => {
+                    const dataEstado = fila.getAttribute("data-estado");
+                    const dataTipo = fila.getAttribute("data-tipo");
+                    const dataFecha = fila.getAttribute("data-fecha");
+                    const dataBusqueda = fila
+                        .getAttribute("data-busqueda")
+                        .toLowerCase();
 
-        filas.forEach((fila) => {
-            const dataEstado = fila.getAttribute("data-estado");
-            const dataTipo = fila.getAttribute("data-tipo");
-            const dataFecha = fila.getAttribute("data-fecha");
-            const dataBusqueda = fila.getAttribute("data-busqueda").toLowerCase();
+                    let mostrar = true;
 
-            let mostrar = true;
+                    if (estado && dataEstado !== estado) mostrar = false;
+                    if (tipo && dataTipo !== tipo) mostrar = false;
+                    if (fecha && dataFecha !== fecha) mostrar = false;
+                    if (texto && !dataBusqueda.includes(texto)) mostrar = false;
 
-            if (estado && dataEstado !== estado) mostrar = false;
-            if (tipo && dataTipo !== tipo) mostrar = false;
-            if (fecha && dataFecha !== fecha) mostrar = false;
-            if (texto && !dataBusqueda.includes(texto)) mostrar = false;
+                    fila.style.display = mostrar ? "" : "none";
+                    if (mostrar) visibles++;
+                });
 
-            fila.style.display = mostrar ? "" : "none";
-            if (mostrar) visibles++;
-        });
+                if (visibles === 0) {
+                    mostrarModal("modalError");
+                }
+            }
 
-        if (visibles === 0) {
-            mostrarModal("modalError");
-        }
-    }
+            document
+                .getElementById("btnAplicarFiltros")
+                .addEventListener("click", aplicarFiltros);
 
-    document.getElementById("btnAplicarFiltros").addEventListener("click", aplicarFiltros);
+            document
+                .getElementById("btnLimpiarFiltros")
+                .addEventListener("click", () => {
+                    document.getElementById("filtroTexto").value = "";
+                    document.getElementById("filtroEstado").value = "";
+                    document.getElementById("filtroTipo").value = "";
+                    document.getElementById("filtroFecha").value = "";
+                    document
+                        .querySelectorAll("#tablaTramites tbody tr")
+                        .forEach((fila) => {
+                            fila.style.display = "";
+                        });
+                });
 
-    document.getElementById("btnLimpiarFiltros").addEventListener("click", () => {
-        document.getElementById("filtroTexto").value = "";
-        document.getElementById("filtroEstado").value = "";
-        document.getElementById("filtroTipo").value = "";
-        document.getElementById("filtroFecha").value = "";
-        document.querySelectorAll("#tablaTramites tbody tr").forEach((fila) => {
-            fila.style.display = "";
-        });
-    });
+            // Opcional: filtrar al teclear
+            document
+                .getElementById("filtroTexto")
+                .addEventListener("keyup", (e) => {
+                    if (e.key === "Enter") {
+                        aplicarFiltros();
+                    }
+                });
 
-    // Opcional: filtrar al teclear
-    document.getElementById("filtroTexto").addEventListener("keyup", (e) => {
-        if (e.key === "Enter") {
-            aplicarFiltros();
-        }
-    });
-
-    // Cargar trámites al iniciar
-    cargarTramites();
-</script>
-</body>
+            // Cargar trámites al iniciar
+            cargarTramites();
+        </script>
+    </body>
 </html>
