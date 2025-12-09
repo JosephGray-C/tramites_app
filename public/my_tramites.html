@@ -104,26 +104,35 @@
                 letter-spacing: 0.01em;
                 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
             }
+
+            /* 🎨 Colores alineados con el panel admin:
+               - Pendiente: gris
+               - En revisión: azul
+               - Aprobado: verde
+               - Rechazado: rojo
+               - Archivado: gris
+            */
             .estado-pendiente {
-                background: #fef3c7;
-                color: #92400e;
+                background: #e5e7eb; /* gris claro */
+                color: #374151;      /* gris oscuro */
             }
             .estado-en_revision {
-                background: #dbeafe;
-                color: #1d4ed8;
+                background: #dbeafe; /* azul claro */
+                color: #1d4ed8;      /* azul */
             }
             .estado-aprobado {
-                background: #dcfce7;
-                color: #166534;
+                background: #dcfce7; /* verde claro */
+                color: #166534;      /* verde */
             }
             .estado-rechazado {
-                background: #fee2e2;
-                color: #b91c1c;
+                background: #fee2e2; /* rojo claro */
+                color: #b91c1c;      /* rojo */
             }
             .estado-archivado {
-                background: #e5e7eb;
-                color: #374151;
+                background: #e5e7eb; /* gris claro */
+                color: #374151;      /* gris oscuro */
             }
+
             .actions .btn-outline {
                 border-radius: 8px;
                 border: 1px solid #d1d5db;
@@ -435,22 +444,30 @@
                             t.historial[t.historial.length - 1].fecha
                                 ? t.historial[t.historial.length - 1].fecha
                                 : fecha;
-                        // Estado badge
+
+                        // 🔧 Normalizar el estado para mapear la clase (soporta 'Pendiente', 'pendiente', 'EnRevisión', 'en_revision', etc.)
+                        const estadoKey = estado
+                            .normalize("NFD")
+                            .replace(/[\u0300-\u036f]/g, "") // quitar acentos
+                            .toLowerCase()
+                            .replace(/[\s_]/g, ""); // quitar espacios y guiones bajos
+
                         let estadoClass = "";
-                        if (estado === "pendiente")
+                        if (estadoKey === "pendiente")
                             estadoClass = "estado-pendiente";
-                        else if (estado === "en_revision")
+                        else if (estadoKey === "enrevision")
                             estadoClass = "estado-en_revision";
-                        else if (estado === "aprobado")
+                        else if (estadoKey === "aprobado")
                             estadoClass = "estado-aprobado";
-                        else if (estado === "rechazado")
+                        else if (estadoKey === "rechazado")
                             estadoClass = "estado-rechazado";
-                        else if (estado === "archivado")
+                        else if (estadoKey === "archivado")
                             estadoClass = "estado-archivado";
                         else estadoClass = "estado-pendiente";
+
                         // Row
                         const row = document.createElement("tr");
-                        row.setAttribute("data-estado", estado);
+                        row.setAttribute("data-estado", estadoKey);
                         row.setAttribute("data-tipo", tipo.toLowerCase());
                         row.setAttribute(
                             "data-fecha",
@@ -526,7 +543,8 @@
 
                     let mostrar = true;
 
-                    if (estado && dataEstado !== estado) mostrar = false;
+                    // ojo: filtroEstado usa valores tipo 'pendiente', 'en_revision', etc.
+                    if (estado && dataEstado !== estado.replace("_", "")) mostrar = false;
                     if (tipo && dataTipo !== tipo) mostrar = false;
                     if (fecha && dataFecha !== fecha) mostrar = false;
                     if (texto && !dataBusqueda.includes(texto)) mostrar = false;

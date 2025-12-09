@@ -4,8 +4,8 @@
     "version": 1,
     "tipo": "General",
     "fechaCreacion": "2025-12-03T22:31:56.670Z",
-    "fechaActualizacion": "2025-12-05T04:25:28.279Z",
-    "estado": "Aprobado",
+    "fechaActualizacion": "2025-12-09T18:44:09.589Z",
+    "estado": "Archivado",
     "datos": {
       "nombre": "Joseph",
       "cedula": "1",
@@ -29,8 +29,104 @@
         "hasta": "Aprobado",
         "usuario": "3@gmail.com",
         "fecha": "2025-12-05T04:25:28.279Z"
+      },
+      {
+        "accion": "cambio_estado",
+        "desde": "Aprobado",
+        "hasta": "Archivado",
+        "usuario": "josephgray514@gmail.com2",
+        "fecha": "2025-12-09T18:44:04.880Z"
+      },
+      {
+        "accion": "cambio_estado",
+        "desde": "Archivado",
+        "hasta": "Archivado",
+        "usuario": "josephgray514@gmail.com2",
+        "fecha": "2025-12-09T18:44:09.589Z"
       }
     ],
-    "usuarioActualiza": "3@gmail.com"
+    "usuarioActualiza": "josephgray514@gmail.com2"
+  },
+  {
+    "id": "021bc6ef-76f5-46b9-86a3-0b13a1142dce",
+    "version": 1,
+    "tipo": "General",
+    "fechaCreacion": "2025-12-09T18:53:39.226Z",
+    "fechaActualizacion": "2025-12-09T19:30:46.334Z",
+    "estado": "Archivado",
+    "datos": {
+      "nombre": "Carlos",
+      "cedula": "11",
+      "telefono": "8417",
+      "grado": "bachillerato",
+      "universidad": "Universidad Latina",
+      "sede": "Sede Central",
+      "rol": "Estudiante"
+    },
+    "documentos": [
+      {
+        "name": "LOGO BIOESENCIA.pdf",
+        "file": "021bc6ef-76f5-46b9-86a3-0b13a1142dce_1765306419227_LOGO BIOESENCIA.pdf.enc"
+      }
+    ],
+    "usuarioCreador": "josephgray514@gmail.com",
+    "historial": [
+      {
+        "accion": "cambio_estado",
+        "desde": "Pendiente",
+        "hasta": "EnRevisión",
+        "usuario": "josephgray514@gmail.com2",
+        "fecha": "2025-12-09T18:54:13.650Z"
+      },
+      {
+        "accion": "cambio_estado",
+        "desde": "EnRevisión",
+        "hasta": "Aprobado",
+        "usuario": "josephgray514@gmail.com2",
+        "fecha": "2025-12-09T19:30:36.021Z"
+      },
+      {
+        "accion": "cambio_estado",
+        "desde": "Aprobado",
+        "hasta": "Archivado",
+        "usuario": "josephgray514@gmail.com2",
+        "fecha": "2025-12-09T19:30:46.333Z"
+      }
+    ],
+    "usuarioActualiza": "josephgray514@gmail.com2"
+  },
+  {
+    "id": "284c7897-939d-4143-82e0-f16f7e963a1c",
+    "version": 1,
+    "tipo": "General",
+    "fechaCreacion": "2025-12-09T19:35:36.610Z",
+    "fechaActualizacion": "2025-12-09T19:38:10.908Z",
+    "estado": "EnRevisión",
+    "datos": {
+      "nombre": "Carlos2",
+      "cedula": "119",
+      "telefono": "841",
+      "grado": "bachillerato",
+      "universidad": "Latina",
+      "sede": "Central",
+      "rol": "Estudiante"
+    },
+    "documentos": [
+      {
+        "name": "LOGO BIOESENCIA.pdf",
+        "file": "284c7897-939d-4143-82e0-f16f7e963a1c_1765308936611_LOGO BIOESENCIA.pdf.enc"
+      }
+    ],
+    "usuarioCreador": "josephgray514@gmail.com",
+    "historial": [
+      {
+        "accion": "cambio_estado",
+        "desde": "Pendiente",
+        "hasta": "EnRevisión",
+        "usuario": "josephgray514@gmail.com2",
+        "fecha": "2025-12-09T19:38:10.908Z"
+      }
+    ],
+    "usuarioActualiza": "josephgray514@gmail.com2"
   }
 ]

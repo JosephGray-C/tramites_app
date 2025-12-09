@@ -81,10 +81,20 @@ function showMFAModal(code) {
 // UI helpers: toast and modal
 function showToast(message, type = 'info', timeout = 3500) {
     let wrap = document.querySelector('.toast-wrap');
-    if (!wrap) { wrap = document.createElement('div'); wrap.className = 'toast-wrap'; document.body.appendChild(wrap); }
-    const t = document.createElement('div'); t.className = `toast ${type}`; t.innerText = message; wrap.appendChild(t);
+    if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.className = 'toast-wrap';
+        document.body.appendChild(wrap);
+    }
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerText = message;
+    wrap.appendChild(t);
     requestAnimationFrame(() => t.classList.add('show'));
-    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 250); }, timeout);
+    setTimeout(() => {
+        t.classList.remove('show');
+        setTimeout(() => t.remove(), 250);
+    }, timeout);
 }
 
 // Download document using fetch with Authorization header
@@ -253,7 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const tbody = table.querySelector('tbody');
             j.forEach(t => {
                 const tr = document.createElement('tr');
-                const badgeClass = (s) => s === 'Pendiente' ? 'status-pendiente' : s === 'EnRevisión' ? 'status-enrevision' : s === 'Aprobado' ? 'status-aprobado' : s === 'Rechazado' ? 'status-rechazado' : 'status-archivado';
+                const badgeClass = (s) =>
+                    s === 'Pendiente' ? 'status-pendiente' :
+                    s === 'EnRevisión' ? 'status-enrevision' :
+                    s === 'Aprobado' ? 'status-aprobado' :
+                    s === 'Rechazado' ? 'status-rechazado' :
+                    'status-archivado';
                 tr.innerHTML = `<td>${t.id.substring(0, 8)}...</td><td>${t.version}</td><td>${t.datos.nombre}</td><td><span class="status-badge ${badgeClass(t.estado)}">${t.estado}</span></td><td></td>`;
                 const actions = tr.querySelector('td:last-child');
                 if (t.estado === 'Rechazado') {
@@ -283,64 +298,112 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ===== ADMIN BANDEJA - LOAD ALL =====
+    // ===== ADMIN BANDEJA - LOAD ALL (REFRESHABLE) =====
+
+    // función reutilizable para construir la tabla completa del admin
+    async function loadAdminTable() {
+        const div = document.getElementById('table');
+        if (!div) return;
+
+        div.innerHTML = '<div class="muted-small">Cargando...</div>';
+        const j = await api('/tramites');
+        if (j.error) { div.innerText = j.error; return; }
+        if (j.length === 0) {
+            div.innerHTML = '<div class="muted-small">No hay trámites.</div>';
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.className = 'table-list';
+        table.innerHTML = '<thead><tr><th>ID</th><th>Versión</th><th>Nombre</th><th>Estado</th><th>Acción</th></tr></thead><tbody></tbody>';
+        const tbody = table.querySelector('tbody');
+
+        j.forEach(t => {
+            const tr = document.createElement('tr');
+            const badgeClass = (s) =>
+                s === 'Pendiente' ? 'status-pendiente' :
+                s === 'EnRevisión' ? 'status-enrevision' :
+                s === 'Aprobado' ? 'status-aprobado' :
+                s === 'Rechazado' ? 'status-rechazado' :
+                'status-archivado';
+
+            tr.innerHTML = `
+                <td>${t.id.substring(0, 8)}...</td>
+                <td>${t.version}</td>
+                <td>${t.datos.nombre}</td>
+                <td><span class="status-badge ${badgeClass(t.estado)}">${t.estado}</span></td>
+                <td></td>
+            `;
+
+            const actions = tr.querySelector('td:last-child');
+
+            const sel = document.createElement('select');
+            sel.innerHTML = `
+                <option value="">Seleccionar estado...</option>
+                <option>Pendiente</option>
+                <option>EnRevisión</option>
+                <option>Aprobado</option>
+                <option>Rechazado</option>
+                <option>Archivado</option>
+            `;
+
+            const btn = document.createElement('button');
+            btn.className = 'action-btn primary';
+            btn.innerText = 'Actualizar';
+            btn.onclick = async () => {
+                const estado = sel.value;
+                if (!estado) {
+                    showToast('Seleccione un estado', 'warning');
+                    return;
+                }
+                const token = getToken();
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const res = await fetch(`/api/tramites/${t.id}/state`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ estado })
+                });
+                const rj = await res.json();
+                if (rj.error) {
+                    showModal('Error', rj.error, 'error');
+                } else {
+                    showModal('Éxito', rj.message, 'success');
+                    // 🔥 Recargar toda la tabla después de actualizar
+                    await loadAdminTable();
+                }
+            };
+
+            actions.appendChild(sel);
+            actions.appendChild(btn);
+
+            if (t.documentos && t.documentos.length) {
+                t.documentos.forEach(d => {
+                    const link = document.createElement('button');
+                    link.className = 'doc-link';
+                    link.type = 'button';
+                    link.innerText = d.name;
+                    link.style.display = 'block';
+                    link.style.fontSize = '12px';
+                    link.style.marginTop = '6px';
+                    link.onclick = () => downloadDocument(t.id, d.file);
+                    actions.appendChild(link);
+                });
+            }
+
+            tbody.appendChild(tr);
+        });
+
+        div.innerHTML = '';
+        div.appendChild(table);
+    }
+
     const loadAll = document.getElementById('loadAll');
     if (loadAll) {
-        loadAll.addEventListener('click', async () => {
-            const div = document.getElementById('table');
-            div.innerHTML = '<div class="muted-small">Cargando...</div>';
-            const j = await api('/tramites');
-            if (j.error) { div.innerText = j.error; return; }
-            if (j.length === 0) { div.innerHTML = '<div class="muted-small">No hay trámites.</div>'; return; }
-            const table = document.createElement('table');
-            table.className = 'table-list';
-            table.innerHTML = '<thead><tr><th>ID</th><th>Versión</th><th>Nombre</th><th>Estado</th><th>Acción</th></tr></thead><tbody></tbody>';
-            const tbody = table.querySelector('tbody');
-            j.forEach(t => {
-                const tr = document.createElement('tr');
-                const badgeClass = (s) => s === 'Pendiente' ? 'status-pendiente' : s === 'EnRevisión' ? 'status-enrevision' : s === 'Aprobado' ? 'status-aprobado' : s === 'Rechazado' ? 'status-rechazado' : 'status-archivado';
-                tr.innerHTML = `<td>${t.id.substring(0, 8)}...</td><td>${t.version}</td><td>${t.datos.nombre}</td><td><span class="status-badge ${badgeClass(t.estado)}">${t.estado}</span></td><td></td>`;
-                const actions = tr.querySelector('td:last-child');
-                const sel = document.createElement('select');
-                sel.innerHTML = '<option value="">Seleccionar estado...</option><option>Pendiente</option><option>EnRevisión</option><option>Aprobado</option><option>Rechazado</option><option>Archivado</option>';
-                const btn = document.createElement('button');
-                btn.className = 'action-btn primary';
-                btn.innerText = 'Actualizar';
-                btn.onclick = async () => {
-                    const estado = sel.value;
-                    if (!estado) return showToast('Seleccione un estado', 'warning');
-                    const token = getToken();
-                    const headers = { 'Content-Type': 'application/json' };
-                    if (token) headers['Authorization'] = `Bearer ${token}`;
-                    const res = await fetch(`/api/tramites/${t.id}/state`, {
-                        method: 'POST',
-                        headers,
-                        body: JSON.stringify({ estado })
-                    });
-                    const rj = await res.json();
-                    if (rj.error) showModal('Error', rj.error, 'error');
-                    else { showModal('Éxito', rj.message, 'success'); }
-                };
-                actions.appendChild(sel);
-                actions.appendChild(btn);
-                if (t.documentos && t.documentos.length) {
-                    t.documentos.forEach(d => {
-                        const link = document.createElement('button');
-                        link.className = 'doc-link';
-                        link.type = 'button';
-                        link.innerText = d.name;
-                        link.style.display = 'block';
-                        link.style.fontSize = '12px';
-                        link.style.marginTop = '6px';
-                        link.onclick = () => downloadDocument(t.id, d.file);
-                        actions.appendChild(link);
-                    });
-                }
-                tbody.appendChild(tr);
-            });
-            div.innerHTML = '';
-            div.appendChild(table);
-        });
+        loadAll.addEventListener('click', loadAdminTable);
+        // Si quieres que cargue automáticamente al entrar al admin:
+        // loadAdminTable();
     }
 
     // ===== RESEND FORM MODAL =====
